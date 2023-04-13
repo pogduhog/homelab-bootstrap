@@ -80,10 +80,17 @@ install_flux_cli() {
 	curl -s https://fluxcd.io/install.sh | doas bash
 }
 
+ssh_keys() {
+	ssh-keygen -t ed35519 -f "$TMP"/bootstrap_key -N ""
+	ls -al $TMP/
+}
+
 SSH_KEY_PRIV="../id_ed25519"
 install_flux() {
 	#flux bootstrap git --help
 		#--private-key-file $SSH_KEY_PRIV \ 
+	ssh_keys
+	return 0
 	doas flux bootstrap git \
 		--url=ssh://git@$GIT_HOST/$GIT_ORG/$GIT_REPO \
 		--branch=main \
