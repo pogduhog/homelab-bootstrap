@@ -23,6 +23,7 @@ GIT_ORG="pogduhog"
 GIT_REPO="homelab-k8s"
 #BOOTSTRAP_KEY=../keys/bootstrap_key
 
+[ -z "$GITHUB_TOKEN" ] && { msg "GITHUB_TOKEN must be set"; exit 1; }
 export GITHUB_TOKEN="$(cat ../keys/github_token)"
 
 install_metallb_manifest() {
