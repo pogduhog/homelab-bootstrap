@@ -16,14 +16,14 @@ msg() {
 	echo ">>> $1"
 }
 
+SUDO='doas'
 GIT_USER="pogduhog"
 GIT_HOST="github.com"
 GIT_ORG="pogduhog"
-GIT_REPO="bootstrap-argocd"
 GIT_REPO="homelab-k8s"
-SUDO='doas'
-BOOTSTRAP_KEY=../keys/bootstrap_key
-mkdir ../keys/
+#BOOTSTRAP_KEY=../keys/bootstrap_key
+
+export GITHUB_TOKEN="$(cat ../keys/github_token)"
 
 install_metallb_manifest() {
 	msg "Installing Metallb..."
@@ -89,16 +89,22 @@ generate_ssh_keys() {
 		cat "$BOOTSTRAP_KEY".pub
 		msg "Press Enter to continue"
 		read -p "Press Enter to continue" reply
-
 	fi
 }
 
-install_flux() {
+install_flux_git() {
 	generate_ssh_keys
 	doas flux bootstrap git \
 		--url=ssh://git@$GIT_HOST/$GIT_ORG/$GIT_REPO \
 		--branch=main \
 		--private-key-file "$BOOTSTRAP_KEY" \ 
+		--path=clusters/production
+}
+
+install_flux() {
+	$SUDO flux bootstrap github \
+		--owner="$GIT_ORG" \
+		--repository="$GIT_REPO" \
 		--path=clusters/production
 }
 
