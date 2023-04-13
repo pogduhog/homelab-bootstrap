@@ -23,6 +23,7 @@ GIT_REPO="bootstrap-argocd"
 GIT_REPO="homelab-k8s"
 SUDO='doas'
 BOOTSTRAP_KEY=../keys/bootstrap_key
+mkdir ../keys/
 
 install_metallb_manifest() {
 	msg "Installing Metallb..."
