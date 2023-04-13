@@ -85,8 +85,11 @@ install_flux_cli() {
 generate_ssh_keys() {
 	if [ ! -e "$BOOTSTRAP_KEY" ]; then
 		ssh-keygen -t ed25519 -f "$BOOTSTRAP_KEY" -N ""
-		echo "Add the following read/write deploy key to the target repository:"
+		msg "Add the following read/write deploy key to the target repository:"
 		cat "$BOOTSTRAP_KEY".pub
+		msg "Press Enter to continue"
+		read -p "Press Enter to continue" reply
+
 	fi
 }
 
