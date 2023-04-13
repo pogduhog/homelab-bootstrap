@@ -81,7 +81,7 @@ install_flux_cli() {
 }
 
 ssh_keys() {
-	ssh-keygen -t ed35519 -f "$TMP"/bootstrap_key -N ""
+	ssh-keygen -t ed25519 -f "$TMP"/bootstrap_key -N ""
 	ls -al $TMP/
 }
 
