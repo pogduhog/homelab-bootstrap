@@ -103,10 +103,13 @@ install_flux_git() {
 }
 
 install_flux() {
-	$SUDO env GITHUB_TOKEN="$GITHUB_TOKEN" flux bootstrap github \
+	$SUDO env GITHUB_TOKEN="$GITHUB_TOKEN" \
+		flux bootstrap github \
 		--owner="$GIT_ORG" \
+		--personal \
+		--private \
 		--repository="$GIT_REPO" \
-		--path=clusters/production
+		--path=bootstrap
 }
 
 case "$1" in 
