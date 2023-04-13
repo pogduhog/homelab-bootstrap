@@ -6,7 +6,7 @@ LF="$(printf '\nq')"; LF=${LF%q}
 TMP=$(mktemp -d)
 
 clean_up() {
-	rm -r $TMP
+	rm -rv "$TMP"
 	exit "$1"
 }
 
@@ -22,6 +22,7 @@ GIT_ORG="pogduhog"
 GIT_REPO="bootstrap-argocd"
 GIT_REPO="homelab-k8s"
 SUDO='doas'
+BOOTSTRAP_KEY=../keys/bootstrap_key
 
 install_metallb_manifest() {
 	msg "Installing Metallb..."
@@ -80,20 +81,20 @@ install_flux_cli() {
 	curl -s https://fluxcd.io/install.sh | doas bash
 }
 
-ssh_keys() {
-	ssh-keygen -t ed25519 -f "$TMP"/bootstrap_key -N ""
-	ls -al $TMP/
+generate_ssh_keys() {
+	if [ ! -e "$BOOTSTRAP_KEY" ]; then
+		ssh-keygen -t ed25519 -f "$BOOTSTRAP_KEY" -N ""
+		echo "Add the following read/write deploy key to the target repository:"
+		cat "$BOOTSTRAP_KEY".pub
+	fi
 }
 
-SSH_KEY_PRIV="../id_ed25519"
 install_flux() {
-	#flux bootstrap git --help
-		#--private-key-file $SSH_KEY_PRIV \ 
-	ssh_keys
-	return 0
+	generate_ssh_keys
 	doas flux bootstrap git \
 		--url=ssh://git@$GIT_HOST/$GIT_ORG/$GIT_REPO \
 		--branch=main \
+		--private-key-file "$BOOTSTRAP_KEY" \ 
 		--path=clusters/production
 }
 
