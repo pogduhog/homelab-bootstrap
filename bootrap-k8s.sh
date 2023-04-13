@@ -24,7 +24,7 @@ GIT_REPO="homelab-k8s"
 #BOOTSTRAP_KEY=../keys/bootstrap_key
 
 [ -z "$GITHUB_TOKEN" ] && { msg "GITHUB_TOKEN must be set"; exit 1; }
-export GITHUB_TOKEN="$(cat ../keys/github_token)"
+#export GITHUB_TOKEN="$(cat ../keys/github_token)"
 
 install_metallb_manifest() {
 	msg "Installing Metallb..."
@@ -103,7 +103,7 @@ install_flux_git() {
 }
 
 install_flux() {
-	$SUDO flux bootstrap github \
+	$SUDO env GITHUB_TOKEN="$GITHUB_TOKEN" flux bootstrap github \
 		--owner="$GIT_ORG" \
 		--repository="$GIT_REPO" \
 		--path=clusters/production
